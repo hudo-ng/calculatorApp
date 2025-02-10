@@ -23,29 +23,38 @@ const operatorButtons = document
   .querySelectorAll(".btn__operator")
   .forEach((button) => {
     button.addEventListener("click", () => {
-      if (previousValue) {
+      if (onButtonRightAfterOperator) {
+        previousOperator = button.getAttribute("id");
+        return;
+      } else if (previousValue) {
         let currentValue = result.innerText;
         onButtonRightAfterOperator = true;
-        if (previousOperator === "add") {
-          result.innerText = Number(previousValue) + Number(currentValue);
-        }
-        if (previousOperator === "subtract") {
-          result.innerText = Number(previousValue) - Number(currentValue);
-        }
-        if (previousOperator === "multiply") {
-          result.innerText = Number(previousValue) * Number(currentValue);
-        }
-        if (previousOperator === "divide") {
-          result.innerText = Number(previousValue) / Number(currentValue);
-        }
+        result.innerText = operation(
+          previousOperator,
+          previousValue,
+          currentValue
+        );
         previousValue = result.innerText;
-        previousOperator = button.getAttribute("id");
       } else {
         previousValue = result.innerText;
-        previousOperator = button.getAttribute("id");
         result.innerText = "0";
       }
+      previousOperator = button.getAttribute("id");
     });
+  });
+
+const equalButton = document
+  .querySelector("#equal")
+  .addEventListener("click", () => {
+    if (previousValue) {
+      currentValue = result.innerText;
+      result.innerText = operation(
+        previousOperator,
+        previousValue,
+        currentValue
+      );
+      previousValue = undefined;
+    }
   });
 
 const cancelButton = document
@@ -53,4 +62,23 @@ const cancelButton = document
   .addEventListener("click", () => {
     result.innerText = "0";
     previousValue = undefined;
+    previousOperator = undefined;
+    onButtonRightAfterOperator = false;
   });
+
+function operation(operand, operator1, operator2) {
+  let result;
+  if (operand === "add") {
+    result = Number(operator1) + Number(operator2);
+  }
+  if (operand === "subtract") {
+    result = Number(operator1) - Number(operator2);
+  }
+  if (operand === "multiply") {
+    result = Number(operator1) * Number(operator2);
+  }
+  if (operand === "divide") {
+    result = Number(operator1) / Number(operator2);
+  }
+  return result;
+}
