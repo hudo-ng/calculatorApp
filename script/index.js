@@ -54,6 +54,7 @@ const equalButton = document
         currentValue
       );
       previousValue = undefined;
+      onButtonRightAfterOperator = true;
     }
   });
 
